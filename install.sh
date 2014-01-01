@@ -4,6 +4,13 @@
 #
 # Script for Aws-EC2 to install LAMP + Wordpress + rmate
 
+# Advice user to run script with sudo
+if [[ $UID != 0 ]]; then
+    echo "Please run this script with sudo:"
+    echo "sudo $0 $*"
+    exit 1
+fi
+
 # Install rmate
 # after typing <ssh -R 52698:localhost:52698 awshost> awshost:user@example.com in the local machine
 # https://github.com/textmate/rmate/
@@ -12,18 +19,11 @@ curl -Lo ~/bin/rmate https://raw.github.com/textmate/rmate/master/bin/rmate
 chmod a+x ~/bin/rmate
 export PATH="$PATH:$HOME/bin"
 
-# Advice user to run script with sudo
-if [[ $UID != 0 ]]; then
-    echo "Please run this script with sudo:"
-    echo "sudo $0 $*"
-    exit 1
-fi
-
 # Installs the updates, without confirmation with -y option 
 yum update -y
 
 # Install the Apache web server, MySQL, and PHP software packages
-yum groupinstall -y "Web Server" "MySQL Database" "PHP Support" "git"
+yum groupinstall -y "Web Server" "MySQL Database" "PHP Support"
 
 # Install the php-mysql package
 yum install -y php-mysql
@@ -63,7 +63,7 @@ find /var/www -type d -exec sudo chmod 2775 {} +
 # Recursively change the file permissions of /var/www and its subdirectories to add group write permissions.
 find /var/www -type f -exec sudo chmod 0664 {} +
 
-chmod a+x ec2-install/test.sh
-chmod a+x ec2-install/remove.sh
+chmod a+x ec2-setup/test.sh
+chmod a+x ec2-setup/remove.sh
 
 echo "end of script relogin now"
